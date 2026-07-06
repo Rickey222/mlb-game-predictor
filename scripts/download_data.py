@@ -1,9 +1,12 @@
 import pandas as pd
 
 
-def download_season(year, team):
+TEAMS = ["DET", "NYY", "BOS", "LAD", "CHC"]
+
+
+def download_team_schedule(team, year):
     url = f"https://www.baseball-reference.com/teams/{team}/{year}-schedule-scores.shtml"
-    print(f"Downloading data from {url}")
+    print(f"Downloading {team} {year} data...")
 
     tables = pd.read_html(url)
     games = tables[0]
@@ -13,14 +16,13 @@ def download_season(year, team):
     output_path = f"data/raw/{team}_{year}_games.csv"
     games.to_csv(output_path, index=False)
 
-    print("\nDownload complete!")
-    print(f"Number of games: {len(games)}")
-    print("\nColumns:")
-    print(games.columns.tolist())
-    print("\nFirst 5 rows:")
-    print(games.head())
-    print(f"\nSaved to {output_path}")
+    print(f"Saved {len(games)} games to {output_path}")
+
+
+def download_multiple_teams(year):
+    for team in TEAMS:
+        download_team_schedule(team, year)
 
 
 if __name__ == "__main__":
-    download_season(2024, "DET")
+    download_multiple_teams(2024)

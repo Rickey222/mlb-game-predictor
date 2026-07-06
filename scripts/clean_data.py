@@ -1,6 +1,9 @@
 import pandas as pd
 
 
+TEAMS = ["DET", "NYY", "BOS", "LAD", "CHC"]
+
+
 def clean_team_schedule(team, year):
     input_path = f"data/raw/{team}_{year}_games.csv"
     output_path = f"data/processed/{team}_{year}_cleaned.csv"
@@ -21,7 +24,7 @@ def clean_team_schedule(team, year):
     })
 
     cleaned["is_home"] = cleaned["home_away"].isna()
-    cleaned["won"] = cleaned["result"].str.startswith("W")
+    cleaned["won"] = cleaned["result"].astype(str).str.startswith("W")
 
     columns_to_keep = [
         "game_number",
@@ -38,9 +41,13 @@ def clean_team_schedule(team, year):
 
     cleaned.to_csv(output_path, index=False)
 
-    print(f"Cleaned data saved to {output_path}")
-    print(cleaned.head())
+    print(f"Saved cleaned data to {output_path}")
+
+
+def clean_multiple_teams(year):
+    for team in TEAMS:
+        clean_team_schedule(team, year)
 
 
 if __name__ == "__main__":
-    clean_team_schedule("DET", 2024)
+    clean_multiple_teams(2024)
