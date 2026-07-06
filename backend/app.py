@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from predictor import predict_game
 
 app = Flask(__name__)
 
@@ -22,19 +23,9 @@ def predict():
     home_team = request.args.get("home_team", "DET")
     away_team = request.args.get("away_team", "NYY")
 
-    # Temporary placeholder prediction
-    home_win_probability = 0.55
-    away_win_probability = 0.45
+    prediction = predict_game(home_team, away_team)
 
-    predicted_winner = home_team if home_win_probability > away_win_probability else away_team
-
-    return jsonify({
-        "home_team": home_team,
-        "away_team": away_team,
-        "home_win_probability": home_win_probability,
-        "away_win_probability": away_win_probability,
-        "predicted_winner": predicted_winner
-    })
+    return jsonify(prediction)
 
 
 if __name__ == "__main__":
